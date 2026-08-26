@@ -1,11 +1,15 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_GATEWAY_URL =
-  process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost:7000";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  process.env.NEXT_PUBLIC_API_GATEWAY_URL ||
+  "http://localhost:7000";
+
+export const API_GATEWAY_URL = API_BASE_URL;
 
 // In browser, using relative URL "" delegates requests through Next.js proxy rewrites, avoiding CORS
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: typeof window !== "undefined" ? "" : API_GATEWAY_URL,
+  baseURL: typeof window !== "undefined" ? "" : API_BASE_URL,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
@@ -22,7 +26,8 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-    console.debug(`[API Gateway Request] ${config.method?.toUpperCase()} -> ${config.baseURL || ""}${config.url}`);
+    const fullUrl = `${config.baseURL || ""}${config.url}`;
+    console.debug(`[API Gateway Request] ${config.method?.toUpperCase()} -> ${fullUrl}`);
     return config;
   },
   (error: AxiosError) => {

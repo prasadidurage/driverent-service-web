@@ -71,22 +71,22 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="customerId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Customer / Driver *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Customer / Driver *</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 disabled={fetching}
               >
                 <FormControl>
-                  <SelectTrigger className="h-10 rounded-xl bg-white text-sm">
+                  <SelectTrigger className="h-11 rounded-2xl bg-white border-rose-200/80 text-sm">
                     <SelectValue placeholder={fetching ? "Loading customers…" : "Select a registered customer"} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-white border-slate-200 rounded-xl">
+                <SelectContent className="bg-white border-rose-100 rounded-2xl">
                   {customers.map((c) => (
                     <SelectItem key={c.customerId} value={c.customerId}>
                       {c.fullName}{" "}
-                      <span className="text-slate-400 text-xs">({c.customerId})</span>
+                      <span className="text-zinc-400 text-xs">({c.customerId})</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -101,21 +101,21 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="vehicleId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Assigned Vehicle *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Assigned Fleet Vehicle *</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 disabled={fetching}
               >
                 <FormControl>
-                  <SelectTrigger className="h-10 rounded-xl bg-white text-sm">
+                  <SelectTrigger className="h-11 rounded-2xl bg-white border-rose-200/80 text-sm">
                     <SelectValue placeholder={fetching ? "Loading fleet…" : "Select an available vehicle"} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-white border-slate-200 rounded-xl">
+                <SelectContent className="bg-white border-rose-100 rounded-2xl">
                   {vehicles.map((v) => (
                     <SelectItem key={v.vehicleId} value={v.vehicleId}>
-                      {v.name} <span className="text-slate-400 text-xs">({v.vehicleId} - ${v.dailyRate}/day)</span>
+                      {v.name} <span className="text-zinc-400 text-xs font-mono">({v.vehicleId} - ${v.dailyRate}/day)</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -130,9 +130,9 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Booking Date *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Reservation Date *</FormLabel>
               <FormControl>
-                <Input type="date" {...field} className="h-10 rounded-xl bg-white text-sm" />
+                <Input type="date" {...field} className="h-11 rounded-2xl bg-white border-rose-200/80 text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -140,12 +140,12 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
         />
 
         <div className="flex justify-end gap-2.5 pt-3">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-xl h-10 px-4">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-2xl h-11 px-4 border-zinc-200">
             Cancel
           </Button>
-          <Button type="submit" disabled={loading || fetching} className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl h-10 px-5 font-semibold shadow-md shadow-amber-600/20">
+          <Button type="submit" disabled={loading || fetching} className="bg-rose-600 hover:bg-rose-700 text-white rounded-2xl h-11 px-6 font-bold shadow-md shadow-rose-600/25">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {booking ? "Update Booking" : "Confirm Booking"}
+            {booking ? "Update Booking" : "Confirm Reservation"}
           </Button>
         </div>
       </form>

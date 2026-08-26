@@ -49,13 +49,13 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="vehicleId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Vehicle ID *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Vehicle ID *</FormLabel>
               <FormControl>
                 <Input
                   placeholder="VEH-001"
                   {...field}
                   disabled={!!vehicle}
-                  className={`h-10 rounded-xl font-mono text-sm ${vehicle ? "bg-slate-50" : "bg-white"}`}
+                  className={`h-11 rounded-2xl font-mono text-sm border-rose-200/80 ${vehicle ? "bg-rose-50/50" : "bg-white"}`}
                 />
               </FormControl>
               <FormMessage />
@@ -68,12 +68,12 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Vehicle Model / Name *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Vehicle Model / Name *</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Toyota Prius / Honda Civic"
+                  placeholder="Tesla Model 3 / BMW M4 / Porsche 911"
                   {...field}
-                  className="h-10 rounded-xl bg-white text-sm"
+                  className="h-11 rounded-2xl bg-white border-rose-200/80 text-sm"
                 />
               </FormControl>
               <FormMessage />
@@ -86,15 +86,15 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="dailyRate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold text-slate-700">Daily Rate ($) *</FormLabel>
+              <FormLabel className="text-xs font-bold text-zinc-700">Daily Rental Rate ($) *</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   step="0.01"
-                  placeholder="50.00"
+                  placeholder="75.00"
                   value={field.value}
                   onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                  className="h-10 rounded-xl bg-white text-sm"
+                  className="h-11 rounded-2xl bg-white border-rose-200/80 text-sm"
                 />
               </FormControl>
               <FormMessage />
@@ -103,10 +103,10 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
         />
 
         <div className="flex justify-end gap-2.5 pt-3">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-xl h-10 px-4">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-2xl h-11 px-4 border-zinc-200">
             Cancel
           </Button>
-          <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl h-10 px-5 font-semibold shadow-md shadow-emerald-600/20">
+          <Button type="submit" disabled={loading} className="bg-rose-600 hover:bg-rose-700 text-white rounded-2xl h-11 px-6 font-bold shadow-md shadow-rose-600/25">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {vehicle ? "Update Vehicle" : "Add to Fleet"}
           </Button>

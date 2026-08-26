@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, Search, Pencil, Trash2, Eye, Users, RefreshCw, Phone, Mail, IdCard } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Eye, Users, RefreshCw, Phone, Mail, IdCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -24,12 +24,11 @@ import type { Customer } from "@/types";
 import { CustomerForm } from "@/components/customers/customer-form";
 
 const PALETTES = [
-  { bg: "bg-sky-100", text: "text-sky-700" },
-  { bg: "bg-indigo-100", text: "text-indigo-700" },
-  { bg: "bg-emerald-100", text: "text-emerald-700" },
-  { bg: "bg-amber-100", text: "text-amber-700" },
-  { bg: "bg-violet-100", text: "text-violet-700" },
   { bg: "bg-rose-100", text: "text-rose-700" },
+  { bg: "bg-red-100", text: "text-red-700" },
+  { bg: "bg-zinc-100", text: "text-zinc-800" },
+  { bg: "bg-rose-50", text: "text-rose-600" },
+  { bg: "bg-orange-100", text: "text-orange-700" },
 ];
 
 function palette(name: string) {
@@ -123,11 +122,11 @@ function CustomersContent() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-10">
       {/* Search & Actions Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-3xl bg-white border border-rose-100/80 shadow-xs">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
           <Input
-            className="pl-10 h-11 bg-slate-50 border-slate-200 placeholder:text-slate-400 focus-visible:ring-sky-500 rounded-xl"
+            className="pl-10 h-11 bg-rose-50/40 border-rose-200/80 placeholder:text-zinc-400 focus-visible:ring-rose-500 rounded-2xl text-sm"
             placeholder="Search by name, ID, NIC/Passport, phone…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -139,13 +138,13 @@ function CustomersContent() {
             size="icon" 
             onClick={fetchCustomers} 
             disabled={loading}
-            className="h-11 w-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 shadow-2xs"
+            className="h-11 w-11 rounded-2xl border-rose-200 text-rose-700 hover:bg-rose-50 shadow-2xs"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
           <Button 
             onClick={openNew} 
-            className="gap-2 h-11 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-md shadow-sky-600/20"
+            className="gap-2 h-11 px-5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-md shadow-rose-600/25"
           >
             <Plus className="h-4 w-4" /> Add Customer
           </Button>
@@ -153,32 +152,32 @@ function CustomersContent() {
       </div>
 
       {/* Table Container */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-        <div className="h-1 w-full bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-400" />
+      <div className="rounded-3xl border border-rose-100 bg-white shadow-xs overflow-hidden">
+        <div className="h-1.5 w-full bg-gradient-to-r from-rose-600 via-red-500 to-rose-400" />
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/80 border-slate-100 hover:bg-slate-50/80">
-              <TableHead className="w-14 text-slate-500 text-xs font-bold uppercase tracking-wider pl-6"></TableHead>
-              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Customer Name</TableHead>
-              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Customer ID</TableHead>
-              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">NIC / Passport</TableHead>
-              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Contact</TableHead>
-              <TableHead className="text-right text-slate-600 text-xs font-bold uppercase tracking-wider pr-6">Actions</TableHead>
+            <TableRow className="bg-rose-50/50 border-rose-100 hover:bg-rose-50/50">
+              <TableHead className="w-14 text-zinc-500 text-xs font-bold uppercase tracking-wider pl-6"></TableHead>
+              <TableHead className="text-zinc-700 text-xs font-bold uppercase tracking-wider">Customer Name</TableHead>
+              <TableHead className="text-zinc-700 text-xs font-bold uppercase tracking-wider">Customer ID</TableHead>
+              <TableHead className="text-zinc-700 text-xs font-bold uppercase tracking-wider">NIC / Passport</TableHead>
+              <TableHead className="text-zinc-700 text-xs font-bold uppercase tracking-wider">Contact</TableHead>
+              <TableHead className="text-right text-zinc-700 text-xs font-bold uppercase tracking-wider pr-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i} className="border-slate-100">
+                <TableRow key={i} className="border-rose-100">
                   {Array.from({ length: 6 }).map((__, j) => (
                     <TableCell key={j} className="py-4"><Skeleton className="h-6 w-full rounded-md" /></TableCell>
                   ))}
                 </TableRow>
               ))
             ) : filtered.length === 0 ? (
-              <TableRow className="border-slate-100">
-                <TableCell colSpan={6} className="text-center py-16 text-slate-400 text-sm">
-                  <Users className="h-10 w-10 mx-auto mb-2 opacity-30 text-sky-500" />
+              <TableRow className="border-rose-100">
+                <TableCell colSpan={6} className="text-center py-16 text-zinc-400 text-sm">
+                  <Users className="h-10 w-10 mx-auto mb-2 opacity-30 text-rose-500" />
                   {search ? "No matching customers found." : "No customers registered yet."}
                 </TableCell>
               </TableRow>
@@ -186,9 +185,9 @@ function CustomersContent() {
               filtered.map((customer) => {
                 const pal = palette(customer.fullName);
                 return (
-                  <TableRow key={customer.customerId} className="border-slate-100 hover:bg-sky-50/40 transition-colors">
+                  <TableRow key={customer.customerId} className="border-rose-100/60 hover:bg-rose-50/40 transition-colors">
                     <TableCell className="pl-6">
-                      <Avatar className="h-10 w-10 ring-2 ring-white shadow-xs">
+                      <Avatar className="h-10 w-10 ring-2 ring-white shadow-2xs">
                         <AvatarImage
                           src={customer.licenseImageUrl ?? customerApi.getLicenseImageUrl(customer.customerId)}
                           alt={customer.fullName}
@@ -199,20 +198,20 @@ function CustomersContent() {
                       </Avatar>
                     </TableCell>
                     <TableCell>
-                      <p className="font-semibold text-slate-900 text-sm">{customer.fullName}</p>
-                      <p className="text-xs text-slate-400">{customer.email ?? "No email provided"}</p>
+                      <p className="font-bold text-zinc-900 text-sm">{customer.fullName}</p>
+                      <p className="text-xs text-zinc-400">{customer.email ?? "No email provided"}</p>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-mono text-xs bg-slate-50 text-slate-700 border-slate-200">
+                      <span className="font-mono text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-lg">
                         {customer.customerId}
-                      </Badge>
+                      </span>
                     </TableCell>
-                    <TableCell className="text-sm font-mono text-slate-700">
+                    <TableCell className="text-sm font-mono text-zinc-700">
                       {customer.nicOrPassport}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-700">
-                        <Phone className="h-3.5 w-3.5 text-slate-400" />
+                      <div className="flex items-center gap-1.5 text-xs text-zinc-700 font-medium">
+                        <Phone className="h-3.5 w-3.5 text-rose-400" />
                         <span>{customer.mobile}</span>
                       </div>
                     </TableCell>
@@ -221,7 +220,7 @@ function CustomersContent() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 rounded-lg text-slate-500 hover:text-sky-600 hover:bg-sky-50" 
+                          className="h-8 w-8 rounded-xl text-zinc-500 hover:text-rose-600 hover:bg-rose-50" 
                           onClick={() => setViewTarget(customer)}
                         >
                           <Eye className="h-4 w-4" />
@@ -229,7 +228,7 @@ function CustomersContent() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50" 
+                          className="h-8 w-8 rounded-xl text-zinc-500 hover:text-amber-600 hover:bg-amber-50" 
                           onClick={() => openEdit(customer)}
                         >
                           <Pencil className="h-4 w-4" />
@@ -237,7 +236,7 @@ function CustomersContent() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50" 
+                          className="h-8 w-8 rounded-xl text-zinc-500 hover:text-rose-600 hover:bg-rose-50" 
                           onClick={() => { setDeleteTarget(customer); setDeleteOpen(true); }}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -250,17 +249,18 @@ function CustomersContent() {
             )}
           </TableBody>
         </Table>
-        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center text-xs text-slate-500">
+        <div className="px-6 py-3 border-t border-rose-100 bg-rose-50/30 flex justify-between items-center text-xs text-zinc-500">
           <span>Total records: <strong>{filtered.length}</strong></span>
-          <span>Spring Cloud Gateway /api/v1/customers</span>
+          <span className="font-mono text-rose-600">/api/v1/customers</span>
         </div>
       </div>
 
       {/* Create / Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => !open && handleFormClose()}>
-        <DialogContent className="max-w-lg bg-white rounded-2xl border-slate-200 shadow-2xl p-6">
+        <DialogContent className="max-w-lg bg-white rounded-3xl border-rose-100 shadow-2xl p-6">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 text-lg font-bold">
+            <DialogTitle className="text-zinc-900 text-lg font-bold flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-rose-600" />
               {editTarget ? "Edit Customer Record" : "Register New Customer"}
             </DialogTitle>
           </DialogHeader>
@@ -270,16 +270,16 @@ function CustomersContent() {
 
       {/* View Dialog */}
       <Dialog open={!!viewTarget} onOpenChange={(open) => !open && setViewTarget(null)}>
-        <DialogContent className="max-w-md bg-white rounded-2xl border-slate-200 shadow-2xl p-6">
+        <DialogContent className="max-w-md bg-white rounded-3xl border-rose-100 shadow-2xl p-6">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 text-lg font-bold">Customer Details</DialogTitle>
+            <DialogTitle className="text-zinc-900 text-lg font-bold">Driver Identity Details</DialogTitle>
           </DialogHeader>
           {viewTarget && (() => {
             const pal = palette(viewTarget.fullName);
             return (
               <div className="space-y-5 pt-2">
                 <div className="flex flex-col items-center gap-3">
-                  <Avatar className="h-20 w-20 ring-4 ring-sky-50 shadow-md">
+                  <Avatar className="h-20 w-20 ring-4 ring-rose-50 shadow-md">
                     <AvatarImage
                       src={viewTarget.licenseImageUrl ?? customerApi.getLicenseImageUrl(viewTarget.customerId)}
                       alt={viewTarget.fullName}
@@ -289,24 +289,24 @@ function CustomersContent() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="text-center">
-                    <h3 className="text-base font-bold text-slate-900">{viewTarget.fullName}</h3>
-                    <Badge className="font-mono text-xs mt-1 bg-sky-50 text-sky-700 border-sky-200">
+                    <h3 className="text-base font-bold text-zinc-900">{viewTarget.fullName}</h3>
+                    <span className="font-mono text-xs mt-1 bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-0.5 rounded-full inline-block">
                       ID: {viewTarget.customerId}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 overflow-hidden divide-y divide-slate-100 bg-slate-50/50">
+                <div className="rounded-2xl border border-rose-100 overflow-hidden divide-y divide-rose-50 bg-rose-50/20">
                   {[
                     { label: "NIC / Passport", value: viewTarget.nicOrPassport, icon: IdCard },
                     { label: "Mobile Phone", value: viewTarget.mobile, icon: Phone },
                     { label: "Email Address", value: viewTarget.email ?? "—", icon: Mail },
                   ].map(({ label, value, icon: Icon }) => (
                     <div key={label} className="flex justify-between items-center px-4 py-3 bg-white">
-                      <span className="text-xs text-slate-500 flex items-center gap-2">
-                        <Icon className="h-3.5 w-3.5 text-slate-400" /> {label}
+                      <span className="text-xs text-zinc-500 flex items-center gap-2">
+                        <Icon className="h-3.5 w-3.5 text-rose-500" /> {label}
                       </span>
-                      <span className="text-sm font-semibold text-slate-900">{value}</span>
+                      <span className="text-sm font-semibold text-zinc-900">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -314,13 +314,13 @@ function CustomersContent() {
                 <div className="flex gap-3 pt-2">
                   <Button 
                     variant="outline" 
-                    className="flex-1 h-11 rounded-xl border-amber-200 bg-amber-50/60 text-amber-700 hover:bg-amber-100" 
+                    className="flex-1 h-11 rounded-2xl border-rose-200 bg-rose-50/40 text-rose-700 hover:bg-rose-100 font-semibold" 
                     onClick={() => { setViewTarget(null); openEdit(viewTarget); }}
                   >
                     <Pencil className="mr-2 h-4 w-4" /> Edit Profile
                   </Button>
                   <Button 
-                    className="flex-1 h-11 rounded-xl bg-rose-600 hover:bg-rose-700 text-white" 
+                    className="flex-1 h-11 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-md shadow-rose-600/20" 
                     onClick={() => { setDeleteTarget(viewTarget); setDeleteOpen(true); setViewTarget(null); }}
                   >
                     <Trash2 className="mr-2 h-4 w-4" /> Delete
@@ -334,16 +334,16 @@ function CustomersContent() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={(open) => !open && setDeleteOpen(false)}>
-        <AlertDialogContent className="bg-white rounded-2xl border-rose-200 p-6">
+        <AlertDialogContent className="bg-white rounded-3xl border-rose-200 p-6">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-rose-700 font-bold">Delete Customer Record</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-600">
-              Are you sure you want to remove customer <strong className="text-slate-900">{deleteTarget?.fullName}</strong> ({deleteTarget?.customerId})? This action cannot be undone.
+            <AlertDialogDescription className="text-zinc-600">
+              Are you sure you want to remove customer <strong className="text-zinc-900">{deleteTarget?.fullName}</strong> ({deleteTarget?.customerId})? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-4">
-            <AlertDialogCancel className="rounded-xl border-slate-200">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="rounded-xl bg-rose-600 hover:bg-rose-700 text-white" onClick={handleDelete}>
+            <AlertDialogCancel className="rounded-2xl border-zinc-200">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="rounded-2xl bg-rose-600 hover:bg-rose-700 text-white" onClick={handleDelete}>
               Delete Customer
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -355,7 +355,7 @@ function CustomersContent() {
 
 export default function CustomersPage() {
   return (
-    <Suspense fallback={<div className="p-10 text-center text-sm text-slate-400">Loading customer registry...</div>}>
+    <Suspense fallback={<div className="p-10 text-center text-sm text-zinc-400">Loading customer registry...</div>}>
       <CustomersContent />
     </Suspense>
   );
