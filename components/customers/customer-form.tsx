@@ -75,10 +75,10 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         {/* License photo upload */}
-        <div className="flex flex-col items-center gap-3">
-          <Avatar className="h-20 w-20">
+        <div className="flex flex-col items-center gap-2.5 pb-2">
+          <Avatar className="h-20 w-20 ring-4 ring-sky-50 shadow-md">
             <AvatarImage
               src={
                 preview ??
@@ -86,7 +86,7 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
                 (customer ? customerApi.getLicenseImageUrl(customer.customerId) : undefined)
               }
             />
-            <AvatarFallback className="bg-sky-100 text-sky-700 text-2xl font-bold">
+            <AvatarFallback className="bg-sky-100 text-sky-700 text-xl font-bold">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -101,30 +101,27 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
             type="button"
             variant="outline"
             size="sm"
-            className="gap-2"
+            className="gap-2 rounded-xl text-xs border-slate-200"
             onClick={() => fileRef.current?.click()}
           >
             <Upload className="h-3.5 w-3.5" />
-            {licenseImage ? "Change License Photo" : "Upload License Photo"}
+            {licenseImage ? "Change Photo" : "Upload License Document"}
           </Button>
-          {!customer && (
-            <p className="text-xs text-slate-400">Driver license image (optional)</p>
-          )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3.5">
           <FormField
             control={form.control}
             name="customerId"
             render={({ field }) => (
               <FormItem className="col-span-2 sm:col-span-1">
-                <FormLabel>Customer ID *</FormLabel>
+                <FormLabel className="text-xs font-semibold text-slate-700">Customer ID *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="CUST-001"
                     {...field}
                     disabled={!!customer}
-                    className={customer ? "bg-slate-50 font-mono" : "font-mono"}
+                    className={`h-10 rounded-xl font-mono text-sm ${customer ? "bg-slate-50" : "bg-white"}`}
                   />
                 </FormControl>
                 <FormMessage />
@@ -137,9 +134,9 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
             name="fullName"
             render={({ field }) => (
               <FormItem className="col-span-2 sm:col-span-1">
-                <FormLabel>Full Name *</FormLabel>
+                <FormLabel className="text-xs font-semibold text-slate-700">Full Name *</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input placeholder="John Doe" {...field} className="h-10 rounded-xl bg-white text-sm" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -151,9 +148,9 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
             name="nicOrPassport"
             render={({ field }) => (
               <FormItem className="col-span-2 sm:col-span-1">
-                <FormLabel>NIC / Passport *</FormLabel>
+                <FormLabel className="text-xs font-semibold text-slate-700">NIC / Passport *</FormLabel>
                 <FormControl>
-                  <Input placeholder="199012345678 or N1234567" {...field} />
+                  <Input placeholder="199012345678" {...field} className="h-10 rounded-xl font-mono bg-white text-sm" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,9 +162,9 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
             name="mobile"
             render={({ field }) => (
               <FormItem className="col-span-2 sm:col-span-1">
-                <FormLabel>Mobile *</FormLabel>
+                <FormLabel className="text-xs font-semibold text-slate-700">Mobile Phone *</FormLabel>
                 <FormControl>
-                  <Input placeholder="0771234567" {...field} />
+                  <Input placeholder="0771234567" {...field} className="h-10 rounded-xl bg-white text-sm" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,9 +176,9 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
             name="email"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel className="text-xs font-semibold text-slate-700">Email Address</FormLabel>
                 <FormControl>
-                  <Input placeholder="john@example.com" {...field} />
+                  <Input placeholder="john@example.com" {...field} className="h-10 rounded-xl bg-white text-sm" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -189,13 +186,13 @@ export function CustomerForm({ customer, onSubmit, onCancel, loading }: Props) {
           />
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
+        <div className="flex justify-end gap-2.5 pt-3">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-xl h-10 px-4">
             Cancel
           </Button>
-          <Button type="submit" disabled={loading} className="bg-sky-500 hover:bg-sky-600 text-white">
+          <Button type="submit" disabled={loading} className="bg-sky-600 hover:bg-sky-700 text-white rounded-xl h-10 px-5 font-semibold shadow-md shadow-sky-600/20">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {customer ? "Update Customer" : "Create Customer"}
+            {customer ? "Update Record" : "Create Customer"}
           </Button>
         </div>
       </form>

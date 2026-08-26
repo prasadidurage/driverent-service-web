@@ -17,11 +17,6 @@
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -45,63 +40,89 @@
 }
 
 :root {
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Page bg — soft lavender tint instead of near-white */
-    --background:           oklch(0.945 0.012 280);
-    --foreground:           oklch(0.18  0.008 270);
+    /* Crisp, Ultra-Modern Light Canvas */
+    --background:           #f8fafc;
+    --foreground:           #0f172a;
 
-    /* Cards — very light violet-white, not pure white */
-    --card:                 oklch(0.980 0.008 280);
-    --card-foreground:      oklch(0.18  0.008 270);
+    /* Elevated Surface Cards */
+    --card:                 #ffffff;
+    --card-foreground:      #0f172a;
 
-    --popover:              oklch(0.980 0.008 280);
-    --popover-foreground:   oklch(0.18  0.008 270);
+    --popover:              #ffffff;
+    --popover-foreground:   #0f172a;
 
-    /* Brand — vivid violet */
-    --primary:              oklch(0.58 0.24 280);
-    --primary-foreground:   oklch(0.99 0 0);
+    /* Smart Brand Indigo / Violet */
+    --primary:              #6366f1;
+    --primary-foreground:   #ffffff;
 
-    --secondary:            oklch(0.92 0.018 280);
-    --secondary-foreground: oklch(0.35 0.015 270);
+    --secondary:            #f1f5f9;
+    --secondary-foreground: #334155;
 
-    /* Muted — tinted, not grey */
-    --muted:                oklch(0.92 0.014 280);
-    --muted-foreground:     oklch(0.50 0.018 275);
+    --muted:                #f1f5f9;
+    --muted-foreground:     #64748b;
 
-    /* Accent — cyan tint */
-    --accent:               oklch(0.91 0.025 210);
-    --accent-foreground:    oklch(0.38 0.18  210);
+    --accent:               #e0e7ff;
+    --accent-foreground:    #3730a3;
 
-    --destructive:          oklch(0.60 0.24  15);
+    --destructive:          #ef4444;
 
-    /* Borders — visible but soft */
-    --border:               oklch(0.86 0.018 280);
-    --input:                oklch(0.93 0.012 280);
-    --ring:                 oklch(0.58 0.24  280);
+    /* Refined Clean Borders */
+    --border:               #e2e8f0;
+    --input:                #f1f5f9;
+    --ring:                 #6366f1;
 
-    --chart-1: oklch(0.58 0.24 280);
-    --chart-2: oklch(0.56 0.22 240);
-    --chart-3: oklch(0.58 0.20 165);
-    --chart-4: oklch(0.72 0.20  75);
-    --chart-5: oklch(0.60 0.24  15);
-
-    /* Sidebar — deep violet, not white */
-    --sidebar:                    oklch(0.30 0.08 280);
-    --sidebar-foreground:         oklch(0.95 0.008 280);
-    --sidebar-primary:            oklch(0.75 0.18 280);
-    --sidebar-primary-foreground: oklch(0.18 0.06 280);
-    --sidebar-accent:             oklch(0.38 0.10 280);
-    --sidebar-accent-foreground:  oklch(0.92 0.010 280);
-    --sidebar-border:             oklch(0.38 0.08 280);
-    --sidebar-ring:               oklch(0.65 0.20 280);
+    /* High-End Obsidian Dark Sidebar */
+    --sidebar:                    #090d16;
+    --sidebar-foreground:         #f8fafc;
+    --sidebar-primary:            #6366f1;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent:             #1e293b;
+    --sidebar-accent-foreground:  #f8fafc;
+    --sidebar-border:             rgba(255, 255, 255, 0.08);
+    --sidebar-ring:               #6366f1;
 }
 
 @layer base {
-    * { @apply border-border outline-ring/50; }
-    body { @apply bg-background text-foreground; }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    * { 
+        @apply border-border outline-ring/50; 
+        transition-property: color, background-color, border-color, box-shadow;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+    }
+    body { 
+        @apply bg-background text-foreground; 
+        background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%),
+                          radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.04) 0px, transparent 50%),
+                          radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
+        background-attachment: fixed;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: oklch(0.78 0.018 280); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: oklch(0.62 0.024 280); }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+}
+
+/* Glassmorphism and modern glow effects */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-dropdown {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+.glow-card {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08);
 }

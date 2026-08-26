@@ -71,18 +71,18 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="customerId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Customer *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Customer / Driver *</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 disabled={fetching}
               >
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={fetching ? "Loading customers…" : "Select a customer"} />
+                  <SelectTrigger className="h-10 rounded-xl bg-white text-sm">
+                    <SelectValue placeholder={fetching ? "Loading customers…" : "Select a registered customer"} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-white border-violet-200">
+                <SelectContent className="bg-white border-slate-200 rounded-xl">
                   {customers.map((c) => (
                     <SelectItem key={c.customerId} value={c.customerId}>
                       {c.fullName}{" "}
@@ -101,18 +101,18 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="vehicleId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vehicle *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Assigned Vehicle *</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 disabled={fetching}
               >
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={fetching ? "Loading vehicles…" : "Select a vehicle"} />
+                  <SelectTrigger className="h-10 rounded-xl bg-white text-sm">
+                    <SelectValue placeholder={fetching ? "Loading fleet…" : "Select an available vehicle"} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-white border-violet-200">
+                <SelectContent className="bg-white border-slate-200 rounded-xl">
                   {vehicles.map((v) => (
                     <SelectItem key={v.vehicleId} value={v.vehicleId}>
                       {v.name} <span className="text-slate-400 text-xs">({v.vehicleId} - ${v.dailyRate}/day)</span>
@@ -130,22 +130,22 @@ export function BookingForm({ booking, onSubmit, onCancel, loading }: Props) {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Booking Date *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Booking Date *</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="date" {...field} className="h-10 rounded-xl bg-white text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="flex justify-end gap-3 pt-2">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
+        <div className="flex justify-end gap-2.5 pt-3">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-xl h-10 px-4">
             Cancel
           </Button>
-          <Button type="submit" disabled={loading || fetching} className="bg-amber-500 hover:bg-amber-600 text-white">
+          <Button type="submit" disabled={loading || fetching} className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl h-10 px-5 font-semibold shadow-md shadow-amber-600/20">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {booking ? "Update Booking" : "Create Booking"}
+            {booking ? "Update Booking" : "Confirm Booking"}
           </Button>
         </div>
       </form>

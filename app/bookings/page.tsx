@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, Search, Pencil, Trash2, Filter } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Filter, Calendar, RefreshCw, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -18,12 +18,11 @@ import type { Booking, Vehicle } from "@/types";
 import { BookingForm, type BookingFormValues } from "@/components/bookings/booking-form";
 
 const PALETTES = [
-  { bg: "bg-amber-100",   text: "text-amber-700"   },
-  { bg: "bg-sky-100",     text: "text-sky-700"     },
-  { bg: "bg-violet-100",  text: "text-violet-700"  },
+  { bg: "bg-amber-100", text: "text-amber-700" },
+  { bg: "bg-sky-100", text: "text-sky-700" },
+  { bg: "bg-violet-100", text: "text-violet-700" },
   { bg: "bg-emerald-100", text: "text-emerald-700" },
-  { bg: "bg-rose-100",    text: "text-rose-700"    },
-  { bg: "bg-indigo-100",  text: "text-indigo-700"  },
+  { bg: "bg-rose-100", text: "text-rose-700" },
 ];
 
 function palette(name: string) {
@@ -52,7 +51,7 @@ function BookingsContent() {
       setBookings(bks);
       setVehicles(vehs);
     } catch {
-      toast.error("Failed to load bookings");
+      toast.error("Failed to load bookings from Gateway");
     } finally {
       setLoading(false);
     }
@@ -102,7 +101,7 @@ function BookingsContent() {
     if (!deleteTarget?.id) return;
     try {
       await bookingApi.delete(deleteTarget.id);
-      toast.success("Booking deleted");
+      toast.success("Booking cancelled");
       setDeleteOpen(false);
       fetchData();
     } catch {
@@ -124,156 +123,191 @@ function BookingsContent() {
     name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <>
-      <div className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-500" />
-              <Input
-                className="pl-9 bg-white/80 border-amber-200 placeholder:text-amber-400 focus-visible:ring-amber-300 focus-visible:border-amber-400"
-                placeholder="Search customer or vehicle…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-amber-500 shrink-0" />
-              <Select value={vehicleFilter} onValueChange={setVehicleFilter}>
-                <SelectTrigger className="w-48 bg-white/80 border-amber-200 text-foreground">
-                  <SelectValue placeholder="All Vehicles" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-amber-200">
-                  <SelectItem value="all">All Vehicles</SelectItem>
-                  {vehicles.map((v) => (
-                    <SelectItem key={v.vehicleId} value={v.vehicleId}>
-                      {v.vehicleId} – {v.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+    <div className="space-y-6 max-w-7xl mx-auto pb-10">
+      {/* Filter & Action Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Input
+              className="pl-10 h-11 bg-slate-50 border-slate-200 placeholder:text-slate-400 focus-visible:ring-amber-500 rounded-xl"
+              placeholder="Search bookings…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          <Button onClick={openNew} className="gap-2 shrink-0 bg-amber-500 hover:bg-amber-600 text-white shadow-sm shadow-amber-200">
+          <div className="flex items-center gap-2">
+            <Select value={vehicleFilter} onValueChange={setVehicleFilter}>
+              <SelectTrigger className="h-11 w-48 bg-slate-50 border-slate-200 rounded-xl font-medium text-slate-700">
+                <SelectValue placeholder="All Vehicles" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border-slate-200 rounded-xl">
+                <SelectItem value="all">All Vehicles</SelectItem>
+                {vehicles.map((v) => (
+                  <SelectItem key={v.vehicleId} value={v.vehicleId}>
+                    {v.vehicleId} – {v.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={fetchData} 
+            disabled={loading}
+            className="h-11 w-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 shadow-2xs"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          </Button>
+          <Button 
+            onClick={openNew} 
+            className="gap-2 h-11 px-5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-md shadow-amber-600/20"
+          >
             <Plus className="h-4 w-4" /> New Booking
           </Button>
         </div>
+      </div>
 
-        <div className="flex items-center gap-3 text-sm">
-          <span className="text-amber-600">
-            <strong className="text-amber-800">{filtered.length}</strong> booking{filtered.length !== 1 ? "s" : ""}
-          </span>
-          {vehicleFilter !== "all" && (
-            <Badge className="cursor-pointer bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200" onClick={() => setVehicleFilter("all")}>
-              Vehicle: {vehicleFilter} ×
-            </Badge>
-          )}
-        </div>
-
-        <div className="rounded-xl border border-amber-200 bg-white/80 shadow-sm overflow-hidden">
-          <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-yellow-400" />
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-amber-50 border-amber-100 hover:bg-amber-50">
-                <TableHead className="w-10 text-amber-700 text-xs font-semibold uppercase tracking-wide">#</TableHead>
-                <TableHead className="text-amber-700 text-xs font-semibold uppercase tracking-wide">Customer</TableHead>
-                <TableHead className="text-amber-700 text-xs font-semibold uppercase tracking-wide">Customer ID / NIC</TableHead>
-                <TableHead className="text-amber-700 text-xs font-semibold uppercase tracking-wide">Vehicle</TableHead>
-                <TableHead className="text-amber-700 text-xs font-semibold uppercase tracking-wide">Booking Date</TableHead>
-                <TableHead className="text-right text-amber-700 text-xs font-semibold uppercase tracking-wide">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i} className="border-amber-100">
-                    {Array.from({ length: 6 }).map((__, j) => <TableCell key={j}><Skeleton className="h-5 w-full" /></TableCell>)}
-                  </TableRow>
-                ))
-              ) : filtered.length === 0 ? (
-                <TableRow className="border-amber-100">
-                  <TableCell colSpan={6} className="text-center py-12 text-amber-500 text-sm">
-                    {search || vehicleFilter !== "all" ? "No matching bookings found" : "No bookings created yet. Create one!"}
-                  </TableCell>
+      {/* Bookings Table */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400" />
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/80 border-slate-100 hover:bg-slate-50/80">
+              <TableHead className="w-16 text-slate-600 text-xs font-bold uppercase tracking-wider pl-6">ID</TableHead>
+              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Customer / Driver</TableHead>
+              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Vehicle Assigned</TableHead>
+              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Scheduled Date</TableHead>
+              <TableHead className="text-slate-600 text-xs font-bold uppercase tracking-wider">Status</TableHead>
+              <TableHead className="text-right text-slate-600 text-xs font-bold uppercase tracking-wider pr-6">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i} className="border-slate-100">
+                  {Array.from({ length: 6 }).map((__, j) => <TableCell key={j} className="py-4"><Skeleton className="h-6 w-full rounded-md" /></TableCell>)}
                 </TableRow>
-              ) : (
-                filtered.map((b) => {
-                  const displayName = b.customer?.fullName ?? b.customerId;
-                  const pal = palette(displayName);
-                  return (
-                    <TableRow key={b.id} className="border-amber-100 hover:bg-amber-50/60 transition-colors">
-                      <TableCell className="text-amber-600 text-xs font-mono">#{b.id}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2.5">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={b.customer?.licenseImageUrl ?? customerApi.getLicenseImageUrl(b.customerId)} />
-                            <AvatarFallback className={`${pal.bg} ${pal.text} text-xs font-semibold`}>
-                              {initials(displayName)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium text-foreground text-sm">{displayName}</span>
+              ))
+            ) : filtered.length === 0 ? (
+              <TableRow className="border-slate-100">
+                <TableCell colSpan={6} className="text-center py-16 text-slate-400 text-sm">
+                  <Calendar className="h-10 w-10 mx-auto mb-2 opacity-30 text-amber-500" />
+                  {search || vehicleFilter !== "all" ? "No matching reservations found." : "No bookings scheduled yet."}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filtered.map((b) => {
+                const displayName = b.customer?.fullName ?? b.customerId;
+                const pal = palette(displayName);
+                return (
+                  <TableRow key={b.id} className="border-slate-100 hover:bg-amber-50/30 transition-colors">
+                    <TableCell className="pl-6 font-mono text-xs font-bold text-amber-700">
+                      #{b.id}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9 ring-2 ring-white shadow-2xs">
+                          <AvatarImage src={b.customer?.licenseImageUrl ?? customerApi.getLicenseImageUrl(b.customerId)} />
+                          <AvatarFallback className={`${pal.bg} ${pal.text} text-xs font-bold`}>
+                            {initials(displayName)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-semibold text-slate-900 text-sm">{displayName}</p>
+                          <span className="text-xs font-mono text-slate-400">ID: {b.customerId}</span>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className="font-mono text-[11px] bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100">
-                          {b.customer?.nicOrPassport ?? b.customerId}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 font-mono">
-                          {b.vehicleId}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-foreground/80">{formatDate(b.date)}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-amber-500 hover:text-amber-700 hover:bg-amber-100" onClick={() => openEdit(b)}>
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-400 hover:text-rose-600 hover:bg-rose-100" onClick={() => { setDeleteTarget(b); setDeleteOpen(true); }}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 font-mono text-xs hover:bg-emerald-100">
+                        {b.vehicleId}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm font-medium text-slate-700">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                        <span>{formatDate(b.date)}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                        <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+                        Confirmed
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right pr-6">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50" 
+                          onClick={() => openEdit(b)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50" 
+                          onClick={() => { setDeleteTarget(b); setDeleteOpen(true); }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center text-xs text-slate-500">
+          <span>Active reservations: <strong>{filtered.length}</strong></span>
+          <span>Spring Cloud Gateway /api/v1/bookings</span>
         </div>
       </div>
 
+      {/* Create / Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={(open) => !open && handleFormClose()}>
-        <DialogContent className="max-w-md bg-white border-amber-200">
+        <DialogContent className="max-w-md bg-white rounded-2xl border-slate-200 shadow-2xl p-6">
           <DialogHeader>
-            <DialogTitle className="text-amber-900">{editTarget ? "Edit Booking" : "New Booking"}</DialogTitle>
+            <DialogTitle className="text-slate-900 text-lg font-bold">
+              {editTarget ? "Edit Booking Dispatch" : "Schedule New Booking"}
+            </DialogTitle>
           </DialogHeader>
           <BookingForm booking={editTarget} onSubmit={handleFormSubmit} onCancel={handleFormClose} loading={submitting} />
         </DialogContent>
       </Dialog>
 
+      {/* Delete Confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={(open) => !open && setDeleteOpen(false)}>
-        <AlertDialogContent className="bg-white border-rose-200">
+        <AlertDialogContent className="bg-white rounded-2xl border-rose-200 p-6">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-rose-700">Delete Booking</AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground">
-              Are you sure you want to delete booking <strong className="text-foreground">#{deleteTarget?.id}</strong> for <strong className="text-foreground">{deleteTarget?.customer?.fullName ?? deleteTarget?.customerId}</strong> (Vehicle: {deleteTarget?.vehicleId})?
+            <AlertDialogTitle className="text-rose-700 font-bold">Cancel Booking</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600">
+              Are you sure you want to cancel booking <strong className="text-slate-900">#{deleteTarget?.id}</strong> for <strong className="text-slate-900">{deleteTarget?.customer?.fullName ?? deleteTarget?.customerId}</strong> (Vehicle: {deleteTarget?.vehicleId})?
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-border hover:bg-muted">Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-rose-500 hover:bg-rose-600 text-white" onClick={handleDelete}>Delete</AlertDialogAction>
+          <AlertDialogFooter className="mt-4">
+            <AlertDialogCancel className="rounded-xl border-slate-200">Keep</AlertDialogCancel>
+            <AlertDialogAction className="rounded-xl bg-rose-600 hover:bg-rose-700 text-white" onClick={handleDelete}>
+              Cancel Booking
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }
 
 export default function BookingsPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-center text-sm text-muted-foreground">Loading bookings...</div>}>
+    <Suspense fallback={<div className="p-10 text-center text-sm text-slate-400">Loading booking schedule...</div>}>
       <BookingsContent />
     </Suspense>
   );

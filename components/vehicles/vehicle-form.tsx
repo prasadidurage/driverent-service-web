@@ -49,13 +49,13 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="vehicleId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vehicle ID *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Vehicle ID *</FormLabel>
               <FormControl>
                 <Input
                   placeholder="VEH-001"
                   {...field}
                   disabled={!!vehicle}
-                  className={vehicle ? "bg-slate-50 font-mono" : "font-mono"}
+                  className={`h-10 rounded-xl font-mono text-sm ${vehicle ? "bg-slate-50" : "bg-white"}`}
                 />
               </FormControl>
               <FormMessage />
@@ -68,11 +68,12 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vehicle Name *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Vehicle Model / Name *</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Toyota Axio / Honda Grace"
+                  placeholder="Toyota Prius / Honda Civic"
                   {...field}
+                  className="h-10 rounded-xl bg-white text-sm"
                 />
               </FormControl>
               <FormMessage />
@@ -85,7 +86,7 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           name="dailyRate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Daily Rate ($ / LKR) *</FormLabel>
+              <FormLabel className="text-xs font-semibold text-slate-700">Daily Rate ($) *</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -93,6 +94,7 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
                   placeholder="50.00"
                   value={field.value}
                   onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  className="h-10 rounded-xl bg-white text-sm"
                 />
               </FormControl>
               <FormMessage />
@@ -100,13 +102,13 @@ export function VehicleForm({ vehicle, onSubmit, onCancel, loading }: Props) {
           )}
         />
 
-        <div className="flex justify-end gap-3 pt-2">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
+        <div className="flex justify-end gap-2.5 pt-3">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="rounded-xl h-10 px-4">
             Cancel
           </Button>
-          <Button type="submit" disabled={loading} className="bg-emerald-500 hover:bg-emerald-600 text-white">
+          <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl h-10 px-5 font-semibold shadow-md shadow-emerald-600/20">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {vehicle ? "Update Vehicle" : "Create Vehicle"}
+            {vehicle ? "Update Vehicle" : "Add to Fleet"}
           </Button>
         </div>
       </form>
